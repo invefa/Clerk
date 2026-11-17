@@ -1,0 +1,35 @@
+version = 1
+title = "完成"
+[[param]]
+name = "task"
+type = "ref"
+target = "tasks"
+required = true
+[[param]]
+name = "report"
+type = "text"
+required = true
+[[param]]
+name = "evidence"
+type = "path"
+required = true
+[[param]]
+name = "commit"
+type = "commit"
+required = true
+[[step]]
+kind = "tasks"
+verb = "finish"
+keys = ["${params.task}"]
+body = "${params.report}"
+[[step]]
+kind = "tasks"
+verb = "complete"
+keys = ["${params.task}"]
+values = { evidence = "${params.evidence}", commit = "${params.commit}" }
+[[step]]
+kind = "focus"
+verb = "remove"
+keys = ["${params.task}"]
+[[step]]
+verb = "render"

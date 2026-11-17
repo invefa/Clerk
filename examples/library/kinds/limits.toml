@@ -1,0 +1,84 @@
+title = "限制"
+table = ".clerk/data/limits.csv"
+key = ["id"]
+numbering = "limits"
+
+[state]
+field = "state"
+registry = "limit_state"
+default = "open"
+
+[[field]]
+name = "id"
+type = "text"
+role = "status"
+
+[[field]]
+name = "text"
+type = "text"
+required = true
+
+[[field]]
+name = "state"
+type = "enum"
+registry = "limit_state"
+role = "status"
+
+[[field]]
+name = "tasks"
+type = "ref"
+target = "tasks"
+multi = true
+
+[[field]]
+name = "milestones"
+type = "ref"
+target = "milestones"
+multi = true
+
+[[field]]
+name = "evidence"
+type = "path"
+
+[[field]]
+name = "resolved_at"
+type = "stamp"
+
+[[field]]
+name = "created"
+immutable = true
+type = "stamp"
+role = "status"
+auto = "now"
+
+[[field]]
+name = "updated"
+type = "stamp"
+role = "status"
+auto = "now"
+
+[[field]]
+name = "detail"
+type = "text"
+
+[[transition]]
+name = "resolve"
+to = "resolved"
+from = ["open"]
+requires = ["evidence"]
+
+[[transition]]
+name = "reopen"
+to = "open"
+from = ["resolved"]
+
+[[view]]
+name = "list"
+columns = ["id", "text", "state", "tasks"]
+
+[[view]]
+name = "status"
+renderer = "lines"
+target = "status.md"
+region = "limits"
+template = "- {id} [{state}] {text}"

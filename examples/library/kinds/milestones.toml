@@ -1,0 +1,42 @@
+title = "里程碑"
+table = ".clerk/data/milestones.csv"
+key = ["id"]
+numbering = "milestones"
+
+[state]
+field = "state"
+registry = "state"
+default = "todo"
+
+[[field]]
+name = "id"
+type = "text"
+role = "status"
+
+[[field]]
+name = "scope"
+type = "text"
+required = true
+
+[[field]]
+name = "state"
+type = "enum"
+registry = "state"
+role = "status"
+
+[[field]]
+name = "evidence"
+type = "path"
+
+[[view]]
+name = "list"
+columns = ["id", "scope", "state", "evidence"]
+
+[[view]]
+name = "status"
+renderer = "table"
+target = "status.md"
+region = "milestone"
+display = false
+columns = ["id", "scope", "state", "evidence"]
+headers = ["里程碑", "范围", "状态", "证据"]

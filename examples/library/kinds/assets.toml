@@ -1,0 +1,85 @@
+title = "资源"
+table = ".clerk/data/assets.csv"
+key = ["repo", "path"]
+
+[hash]
+file = "path"
+digest = "sha"
+
+[[field]]
+name = "repo"
+type = "enum"
+registry = "repo"
+
+[[field]]
+name = "path"
+type = "text"
+required = true
+
+[[field]]
+name = "sha"
+type = "text"
+role = "status"
+
+[[field]]
+name = "origin"
+type = "text"
+
+[[field]]
+name = "source"
+type = "text"
+
+[[field]]
+name = "license"
+type = "text"
+
+[[field]]
+name = "author"
+type = "text"
+
+[[field]]
+name = "confirmed"
+type = "text"
+
+[[field]]
+name = "task"
+type = "ref"
+target = "tasks"
+
+[[field]]
+name = "date"
+type = "stamp"
+
+[[field]]
+name = "registered"
+type = "text"
+role = "status"
+auto = "git_name"
+
+[[field]]
+name = "registered_email"
+type = "email"
+role = "status"
+auto = "git_email"
+
+[[field]]
+name = "confirmed_email"
+type = "email"
+
+[[action]]
+name = "confirm"
+handler = "identity"
+fields = ["confirmed", "confirmed_email"]
+
+[[view]]
+name = "list"
+columns = ["repo", "path", "origin", "license", "date"]
+
+[[view]]
+name = "status"
+renderer = "table"
+target = "status.md"
+region = "assets"
+display = false
+columns = ["repo", "path", "origin", "license", "author", "date"]
+headers = ["仓库", "路径", "来源", "许可", "作者", "日期"]

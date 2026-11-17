@@ -1,0 +1,30 @@
+title = "契约"
+storage = "document"
+dir = "contracts"
+filename = "{id}-{slug}.md"
+key = ["id"]
+numbering = "contracts"
+
+[[field]]
+name = "id"
+type = "text"
+role = "status"
+
+[[field]]
+name = "slug"
+type = "slug"
+required = true
+write = "create"
+
+[[field]]
+name = "title"
+type = "text"
+required = true
+
+[index]
+file = "contracts/README.md"
+columns = ["file", "title"]
+
+[[view]]
+name = "list"
+columns = ["id", "slug", "title"]

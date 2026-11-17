@@ -1,0 +1,81 @@
+version = 1
+name = "library-reservations"
+
+[layout]
+registry = ".clerk/config/registry"
+kinds = ".clerk/config/kinds"
+data = ".clerk/data"
+status = "status.md"
+seal = ".clerk/seal/seal.csv"
+seal_log = "log/seal-log.md"
+identity = ".work/identity"
+requests = ".clerk/requests"
+log = "log"
+log_archive = "log/archive"
+
+[time]
+offset_hours = 8
+
+[policy]
+auto_commit = false
+auto_push = false
+commit_message = "chore(clerk): update managed state"
+
+[sync]
+enabled = false
+remote = "origin"
+branch = "main"
+fail_closed = false
+
+[ids.tasks]
+pattern = "{prefix}-{serial:3}"
+counter = "serial"
+
+[ids.tasks.tokens]
+prefix = "prefix"
+
+[ids.contracts]
+pattern = "{serial:2}"
+counter = "serial"
+
+[[path]]
+path = ".clerk/data"
+level = "sealed"
+
+[[path]]
+path = "status.md"
+level = "sealed"
+regions = ["tasks", "assets", "milestone", "verify", "limits"]
+
+[[path]]
+path = "contracts"
+level = "validated"
+
+[[path]]
+path = "reviews"
+level = "validated"
+
+[[path]]
+path = "log"
+level = "validated"
+
+[ids.milestones]
+pattern = "M-{serial:2}"
+counter = "serial"
+
+[ids.limits]
+pattern = "LIM-{serial:3}"
+counter = "serial"
+
+[terminal]
+overflow = "full"
+paging = "auto"
+color = "auto"
+
+[[path]]
+path = ".clerk/archive"
+level = "sealed"
+
+[[path]]
+path = "tasks"
+level = "validated"

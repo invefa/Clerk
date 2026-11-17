@@ -1,0 +1,30 @@
+version = 1
+title = "开工"
+[[param]]
+name = "task"
+type = "ref"
+target = "tasks"
+required = true
+[[param]]
+name = "description"
+type = "text"
+required = true
+[[step]]
+kind = "tasks"
+verb = "claim"
+keys = ["${params.task}"]
+[[step]]
+kind = "tasks"
+verb = "start"
+keys = ["${params.task}"]
+[[step]]
+kind = "tasks"
+verb = "brief"
+keys = ["${params.task}"]
+body = "${params.description}"
+[[step]]
+kind = "focus"
+verb = "add"
+keys = ["${params.task}"]
+[[step]]
+verb = "render"

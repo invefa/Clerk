@@ -1,0 +1,31 @@
+title = "日志"
+storage = "document"
+dir = "log"
+archive = "log/archive"
+filename = "{maintainer}/{date}.md"
+header = ".clerk/templates/log-page.md"
+key = ["maintainer", "date"]
+
+[[field]]
+name = "maintainer"
+type = "text"
+role = "status"
+
+[[field]]
+name = "date"
+type = "date"
+role = "status"
+
+[[action]]
+name = "add"
+handler = "append"
+entry_target = "tasks"
+heading = ".clerk/templates/log-entry.md"
+
+[[action]]
+name = "prune"
+handler = "prune"
+
+[[view]]
+name = "list"
+columns = ["maintainer", "date"]

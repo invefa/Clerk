@@ -1,0 +1,19 @@
+# OS metadata
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Local scratch files
+*.log
+*.tmp
+
+# Rust build output
+/target/
+
+# Workspace scratch files
+/.work/

@@ -1,0 +1,28 @@
+title = "验证"
+table = ".clerk/data/verify.csv"
+key = ["item"]
+
+[[field]]
+name = "item"
+type = "text"
+
+[[field]]
+name = "command"
+type = "text"
+
+[[field]]
+name = "result"
+type = "text"
+
+[[view]]
+name = "list"
+columns = ["item", "command"]
+
+[[view]]
+name = "status"
+renderer = "table"
+target = "status.md"
+region = "verify"
+display = false
+columns = ["item", "command", "result"]
+headers = ["项目", "命令或做法", "结果"]

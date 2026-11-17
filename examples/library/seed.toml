@@ -1,0 +1,46 @@
+version = 1
+
+[[step]]
+kind = "contracts"
+verb = "new"
+as = "contract"
+values = { slug = "reservation-rules", title = "预约名额与重复预约规则" }
+body = "# 预约规则\n\n同一读者不能重复预约同一场次；剩余名额不足时拒绝新增预约。\n"
+
+[[step]]
+kind = "tasks"
+verb = "new"
+as = "task"
+values = { title = "校验预约名额并拒绝重复预约", types = "ability", repos = "app", owners = "alice", accept = "剩余名额不足或读者重复预约时给出明确错误，其他预约成功。" }
+tokens = { prefix = "APP" }
+
+[[step]]
+kind = "tasks"
+verb = "brief"
+keys = ["@task"]
+body = "# 预约校验\n\n## 范围\n\n集中处理名额与重复预约检查。\n\n## 验收\n\n覆盖名额已满、重复预约与正常预约三种情况。\n"
+
+[[step]]
+kind = "tasks"
+verb = "link"
+keys = ["@task", "contract", "contracts", "@contract"]
+
+[[step]]
+kind = "tasks"
+verb = "new"
+values = { title = "补充管理员预约操作指南", types = "docs", repos = "docs", owners = "bob" }
+tokens = { prefix = "DOC" }
+
+[[step]]
+kind = "logs"
+verb = "add"
+tokens = { title = "确认预约校验范围", side = "alice", tasks = "${task.id}" }
+body = "已确认名额与重复预约规则，后续实现以关联契约为依据。"
+
+[[step]]
+kind = "focus"
+verb = "add"
+keys = ["@task"]
+
+[[step]]
+verb = "render"

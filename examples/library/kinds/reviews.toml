@@ -1,0 +1,68 @@
+title = "复核"
+storage = "document"
+dir = "reviews"
+filename = "{date}-{time}-{slug}.md"
+meta = "bullets"
+key = ["date", "time"]
+
+[sections]
+required = ["结论", "依据与方法", "发现", "建议与验收", "未验证边界"]
+
+[[field]]
+name = "date"
+type = "date"
+role = "status"
+auto = "today"
+display = "日期"
+
+[[field]]
+name = "time"
+type = "text"
+role = "status"
+auto = "clock"
+display = "时间"
+
+[[field]]
+name = "slug"
+type = "slug"
+required = true
+write = "create"
+
+[[field]]
+name = "title"
+type = "text"
+required = true
+
+[[field]]
+name = "code_base"
+type = "text"
+display = "代码基线"
+
+[[field]]
+name = "design_base"
+type = "text"
+display = "设计基线"
+
+[[field]]
+name = "scope"
+type = "text"
+display = "范围"
+
+[[field]]
+name = "method"
+type = "text"
+display = "方法"
+
+[[field]]
+name = "status"
+type = "text"
+display = "状态"
+
+[[field]]
+name = "supersedes"
+type = "text"
+display = "替代"
+
+[[view]]
+name = "list"
+columns = ["date", "time", "slug", "status"]

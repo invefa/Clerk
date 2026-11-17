@@ -1,0 +1,313 @@
+title = "任务"
+table = ".clerk/data/tasks.csv"
+key = ["id"]
+numbering = "tasks"
+relations_table = ".clerk/data/relations.csv"
+
+[state]
+field = "state"
+registry = "state"
+default = "todo"
+
+[[field]]
+name = "id"
+type = "text"
+role = "status"
+
+[[field]]
+name = "title"
+type = "text"
+required = true
+
+[[field]]
+name = "types"
+type = "enum"
+registry = "type"
+multi = true
+display = "类型"
+
+[[field]]
+name = "repos"
+type = "enum"
+registry = "repo"
+multi = true
+display = "仓库"
+
+[[field]]
+name = "milestones"
+type = "ref"
+target = "milestones"
+multi = true
+display = "里程碑"
+
+[[field]]
+name = "owners"
+type = "ref"
+registry = "person"
+multi = true
+display = "负责"
+
+[[field]]
+name = "state"
+terminal_style = { todo = "muted", active = "info", review = "warning", paused = "muted", held = "warning", done = "success" }
+type = "enum"
+registry = "state"
+role = "status"
+display = "状态"
+
+[[field]]
+name = "updated"
+type = "stamp"
+role = "status"
+auto = "now"
+display = "更新"
+
+[[field]]
+name = "accept"
+type = "text"
+display = "验收"
+
+[[field]]
+name = "evidence"
+type = "path"
+required_when = "state == done"
+display = "证据"
+
+[[field]]
+name = "commit"
+type = "commit"
+required_when = "state == done"
+display = "提交"
+
+[[field]]
+name = "note"
+type = "text"
+required_when = "state == held"
+display = "原因"
+
+[[field]]
+name = "publisher"
+immutable = true
+type = "text"
+role = "status"
+auto = "git_name"
+display = "发布者"
+
+[[field]]
+name = "publisher_email"
+immutable = true
+type = "email"
+role = "status"
+auto = "git_email"
+
+[[field]]
+name = "claimant"
+terminal_style = { "" = "muted" }
+type = "text"
+role = "status"
+display = "认领者"
+
+[[field]]
+name = "claimant_email"
+type = "email"
+role = "status"
+
+[[field]]
+name = "claimed_at"
+type = "stamp"
+role = "status"
+
+[[field]]
+name = "brief"
+type = "path"
+role = "status"
+display = "任务说明"
+
+[[field]]
+name = "completion"
+type = "path"
+role = "status"
+display = "完成说明"
+
+[[field]]
+name = "created"
+immutable = true
+type = "stamp"
+role = "status"
+auto = "now"
+
+[[transition]]
+name = "start"
+to = "active"
+from = ["todo", "paused"]
+
+[[transition]]
+name = "review"
+to = "review"
+from = ["active"]
+
+[[transition]]
+name = "complete"
+to = "done"
+from = ["active", "review"]
+requires = ["evidence", "commit"]
+archive = true
+
+[[transition]]
+name = "hold"
+to = "held"
+from = ["active", "review"]
+requires = ["note"]
+archive = true
+
+[[transition]]
+name = "resume"
+to = "active"
+from = ["paused", "held"]
+
+[[action]]
+name = "claim"
+handler = "identity"
+fields = ["claimant", "claimant_email", "claimed_at"]
+states = ["todo", "active"]
+require_empty = ["claimant"]
+
+[[action]]
+name = "release"
+handler = "clear"
+fields = ["claimant", "claimant_email", "claimed_at"]
+
+[[action]]
+name = "brief"
+handler = "attach"
+field = "brief"
+filename = "tasks/{id}.md"
+
+[[action]]
+name = "finish"
+handler = "attach"
+field = "completion"
+filename = "tasks/{id}-done.md"
+
+[[relation]]
+name = "derived"
+target = "tasks"
+
+[[relation]]
+name = "split"
+target = "tasks"
+
+[[relation]]
+name = "merged"
+target = "tasks"
+
+[[relation]]
+name = "blocked"
+target = "tasks"
+
+[[relation]]
+name = "verified"
+target = "tasks"
+
+[[view]]
+name = "list"
+layout = "summary"
+columns = ["id", "title", "state", "publisher", "claimant", "types", "repos", "updated"]
+empty = { claimant = "unclaimed" }
+flex = "title"
+priority = ["id", "title", "state", "publisher", "claimant", "types", "repos", "updated"]
+
+[[view]]
+name = "long"
+layout = "summary"
+columns = ["id", "title", "state", "publisher", "claimant", "owners", "types", "repos", "milestones", "created", "updated"]
+flex = "title"
+priority = ["id", "title", "state", "publisher", "claimant", "owners", "types", "repos", "updated", "milestones", "created"]
+empty = { claimant = "unclaimed" }
+
+[[view]]
+name = "frag-prefixes"
+renderer = "registry"
+title = "前缀对照"
+source = "prefix"
+columns = ["key", "name", "scope"]
+headers = ["前缀", "方向", "范围"]
+
+[[view]]
+name = "frag-axes"
+renderer = "vocabularies"
+title = "分类取值"
+headers = ["分类", "可取值", "多填"]
+separator = "、"
+multi_display = ["是", "否"]
+
+[[view.entries]]
+display = "类型"
+registry = "type"
+multi = true
+
+[[view.entries]]
+display = "仓库"
+registry = "repo"
+multi = true
+
+[[view.entries]]
+display = "里程碑"
+kind = "milestones"
+
+[[view.entries]]
+display = "负责"
+registry = "person"
+multi = true
+
+[[view.entries]]
+display = "状态"
+registry = "state"
+
+[[view]]
+name = "frag-focus"
+renderer = "focus"
+title = "关注事项"
+source = ".clerk/config/registry/focus.csv"
+columns = ["id", "title"]
+headers = ["编号", "一句话"]
+
+[[view]]
+name = "frag-list"
+renderer = "table"
+title = "清单"
+display = false
+columns = ["id", "title", "types", "repos", "milestones", "owners", "state", "publisher", "claimant", "updated"]
+headers = ["编号", "标题", "类型", "仓库", "里程碑", "负责", "状态", "发布者", "认领者", "更新"]
+
+[[view]]
+name = "frag-details"
+renderer = "details"
+title = "详情"
+logs = true
+logs_prefix = "关联日志"
+columns = ["accept", "evidence", "commit", "brief", "completion"]
+
+[[view]]
+name = "frag-relations"
+renderer = "filetable"
+title = "关联"
+source = ".clerk/data/relations.csv"
+columns = ["from", "kind", "to"]
+headers = ["从", "关系", "到"]
+
+[[view]]
+name = "status"
+renderer = "composite"
+target = "status.md"
+region = "tasks"
+fragments = ["frag-prefixes", "frag-axes", "frag-focus", "frag-list", "frag-details", "frag-relations"]
+
+[context]
+attachments = ["brief", "completion"]
+repos = "repos"
+logs = "logs"
+
+[[relation]]
+name = "contract"
+target = "contracts"
